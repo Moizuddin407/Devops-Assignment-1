@@ -15,6 +15,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -30,7 +33,7 @@ jobs:
       - name: Run frontend tests
         run: |
           cd frontend
-          npm test -- --coverage --ci --silent
+          npm test -- --coverage
 
       - name: Build Docker images
         run: |
@@ -50,3 +53,19 @@ jobs:
       - name: Push backend image to DockerHub
         run: |
           docker push moizz407/devops-assignment-backend
+
+      - name: Set up Babel and Jest for React
+        run: |
+          npm install --save-dev @babel/preset-env @babel/preset-react babel-jest
+
+      - name: Add Jest configuration for testing
+        run: |
+          echo 'module.exports = {
+            transform: {
+              "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
+            },
+            testEnvironment: "jsdom",
+            transformIgnorePatterns: [
+              "node_modules/(?!axios)"
+            ],
+          };' > jest.config.js
