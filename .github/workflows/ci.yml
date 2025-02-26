@@ -1,0 +1,56 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:19.03.12
+        options: --privileged
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Build Docker image for frontend
+      run: |
+        docker build -t frontend:latest ./frontend
+
+    - name: Build Docker image for backend
+      run: |
+        docker build -t backend:latest ./backend
+
+    - name: Run tests (if any, replace with actual test command)
+      run: |
+        echo "Running tests... (This can be replaced with actual test commands)"
+        # You can replace the above line with your actual testing commands, e.g., npm test for Node.js tests
+    
+    - name: Push Docker images (optional, if you want to push to DockerHub)
+      run: |
+        echo "Pushing Docker images to DockerHub"
+        # docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        docker tag frontend:latest your_dockerhub_username/frontend:latest
+        docker tag backend:latest your_dockerhub_username/backend:latest
+        docker push your_dockerhub_username/frontend:latest
+        docker push your_dockerhub_username/backend:latest
+
