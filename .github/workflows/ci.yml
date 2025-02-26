@@ -68,4 +68,5 @@ jobs:
             transformIgnorePatterns: [
               "node_modules/(?!axios)"
             ],
+            moduleFileExtensions: ["js", "jsx", "json", "node"]
           };' > jest.config.js
