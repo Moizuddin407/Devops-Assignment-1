@@ -53,3 +53,19 @@ jobs:
       - name: Push backend image to DockerHub
         run: |
           docker push moizz407/devops-assignment-backend
+
+      - name: Set up Babel and Jest for React
+        run: |
+          npm install --save-dev @babel/preset-env @babel/preset-react babel-jest
+
+      - name: Add Jest configuration for testing
+        run: |
+          echo 'module.exports = {
+            transform: {
+              "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
+            },
+            testEnvironment: "jsdom",
+            transformIgnorePatterns: [
+              "node_modules/(?!axios)"
+            ],
+          };' > jest.config.js
