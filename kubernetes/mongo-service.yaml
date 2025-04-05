@@ -1,0 +1,15 @@
+# ------------------- MongoDB Service -------------------
+# Provides a stable network endpoint for MongoDB
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo # Service name used in backend connection string
+spec:
+  selector:
+    app: mongo # Selects pods managed by the 'mongo' StatefulSet
+  ports:
+    - protocol: TCP
+      port: 27017 # Port the service listens on
+      targetPort: 27017 # Port the MongoDB container listens on
+# Removed clusterIP: None - Using a regular service as per user examples
+---

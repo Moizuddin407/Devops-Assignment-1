@@ -1,0 +1,49 @@
+# kubernetes/base/backend-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1 # Start with 1, adjust for prod/dev later
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: your-dockerhub-username/backend:latest # <-- REPLACE THIS
+          ports:
+            - containerPort: 3000 # Port your server.js listens on
+          env:
+            - name: PORT # Pass the port to your app if it needs it
+              value: "3000"
+            - name: MONGO_URI # Inject the database connection string
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret # Name of the secret created earlier
+                  key: MONGO_URI # Key within the secret
+          livenessProbe:
+            tcpSocket:
+              port: 3000 # Check if the application port is open
+            initialDelaySeconds: 15 # Wait 15s before first probe
+            periodSeconds: 20    # Check every 20s
+          readinessProbe:
+            tcpSocket:
+              port: 3000 # Check if the application port is open and ready
+            initialDelaySeconds: 5  # Wait 5s before first probe
+            periodSeconds: 10   # Check every 10s
+          resources:
+            requests: # Minimum guaranteed resources
+              memory: "64Mi"
+              cpu: "100m" # 0.1 CPU core
+            limits: # Maximum resources allowed
+              memory: "128Mi"
+              cpu: "250m" # 0.25 CPU core
+              # --- ADJUST FOR PROD ---
+              # Prod might need higher limits, e.g.:
+              # memory: "512Mi"
+              # cpu: "500m"

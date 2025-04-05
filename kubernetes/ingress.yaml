@@ -1,0 +1,34 @@
+# kubernetes/base/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp-ingress
+  annotations:
+    # Annotations often depend on your specific Ingress controller (e.g., Nginx, Traefik)
+    # Example for Nginx Ingress to rewrite '/api/' prefix away before sending to backend:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # Consult your Ingress controller's documentation for available annotations
+spec:
+  rules:
+  - host: your-app.example.com # <-- REPLACE with your desired hostname
+    http:
+      paths:
+      - path: /api(/|$)(.*) # Route requests starting with /api/
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-service # Route to backend service
+            port:
+              number: 80 # Port defined in backend-service.yaml
+      - path: / # Route all other traffic
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service # Route to frontend service
+            port:
+              number: 80 # Port defined in frontend-service.yaml
+  # Optional: Configure TLS for HTTPS
+  # tls:
+  # - hosts:
+  #   - your-app.example.com
+  #   secretName: your-tls-secret # A secret containing your TLS certificate and key

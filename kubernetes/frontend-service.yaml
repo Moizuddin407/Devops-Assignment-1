@@ -1,0 +1,12 @@
+# kubernetes/base/frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend # Selects pods with the 'app: frontend' label
+  ports:
+    - protocol: TCP
+      port: 80 # Service listens on port 80
+      targetPort: 80 # Container listens on port 80 (adjust if different)
