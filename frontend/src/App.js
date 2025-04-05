@@ -6,8 +6,8 @@ function App() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/messages") // Correct backend container URL
-      .then(response => {
+    axios.get("/api/messages")
+    .then(response => {
         setMessages(response.data);
       })
       .catch(error => {
@@ -18,8 +18,8 @@ function App() {
   const sendMessage = () => {
     if (message.trim() === "") return;
 
-    axios.post("http://localhost:3000/messages", { message }) // Correct backend container URL
-      .then(response => {
+    axios.post("/api/messages", { message })
+    .then(response => {
         setMessages([...messages, { message }]); // Update UI
         setMessage(""); // Clear input
       })

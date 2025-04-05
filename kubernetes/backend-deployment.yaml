@@ -18,6 +18,8 @@ spec:
         - name: backend
           # !!! REPLACE with your actual backend image !!!
           image: backend-container
+          imagePullPolicy: IfNotPresent   # <-- ADD THIS LINE
+
           ports:
             - containerPort: 3000
           env:

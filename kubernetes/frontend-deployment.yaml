@@ -17,6 +17,7 @@ spec:
         - name: frontend
           # !!! REPLACE with your actual frontend image !!!
           image: frontend-container
+          imagePullPolicy: IfNotPresent    # <-- ADD THIS LINE
           ports:
             - containerPort: 80 # Assuming frontend serves on port 80
           # Liveness/Readiness probes checking the root path
