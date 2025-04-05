@@ -1,12 +1,13 @@
-# kubernetes/base/frontend-service.yaml
+# ------------------- Frontend Service -------------------
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend-service
+  name: frontend # Service name used by Ingress
 spec:
   selector:
-    app: frontend # Selects pods with the 'app: frontend' label
+    app: frontend # Selects frontend pods
   ports:
     - protocol: TCP
-      port: 80 # Service listens on port 80
-      targetPort: 80 # Container listens on port 80 (adjust if different)
+      port: 80 # Service port
+      targetPort: 80 # Frontend container listens on 80
+---

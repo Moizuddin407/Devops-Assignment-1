@@ -1,34 +1,35 @@
-# kubernetes/base/ingress.yaml
+# ------------------- Ingress -------------------
+# Manages external access to the services
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: myapp-ingress
+  name: app-ingress
   annotations:
-    # Annotations often depend on your specific Ingress controller (e.g., Nginx, Traefik)
-    # Example for Nginx Ingress to rewrite '/api/' prefix away before sending to backend:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-    # Consult your Ingress controller's documentation for available annotations
+    # Optional: Add annotations specific to your ingress controller if needed
+    # Example for Nginx: rewrite /backend/* to /* before sending to backend service
+    # nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # Ensure your Ingress Controller is installed and configured
 spec:
   rules:
-  - host: your-app.example.com # <-- REPLACE with your desired hostname
-    http:
-      paths:
-      - path: /api(/|$)(.*) # Route requests starting with /api/
-        pathType: Prefix
-        backend:
-          service:
-            name: backend-service # Route to backend service
-            port:
-              number: 80 # Port defined in backend-service.yaml
-      - path: / # Route all other traffic
-        pathType: Prefix
-        backend:
-          service:
-            name: frontend-service # Route to frontend service
-            port:
-              number: 80 # Port defined in frontend-service.yaml
+    - host: yourdomain.com # !!! REPLACE THIS with your actual domain !!!
+      http:
+        paths:
+          - path: /frontend # Route requests for yourdomain.com/frontend...
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend # ...to the frontend service
+                port:
+                  number: 80
+          - path: /backend # Route requests for yourdomain.com/backend...
+            pathType: Prefix
+            backend:
+              service:
+                name: backend # ...to the backend service
+                port:
+                  number: 3000
   # Optional: Configure TLS for HTTPS
   # tls:
   # - hosts:
-  #   - your-app.example.com
-  #   secretName: your-tls-secret # A secret containing your TLS certificate and key
+  #   - yourdomain.com # Must match the host above
+  #   secretName: your-tls-secret # Name of the Secret containing TLS cert and key

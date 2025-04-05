@@ -1,10 +1,11 @@
-# kubernetes/base/backend-deployment.yaml
+
+# ------------------- Backend Deployment -------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-deployment
+  name: backend
 spec:
-  replicas: 1 # Start with 1, adjust for prod/dev later
+  replicas: 1 # Adjust for prod/dev later
   selector:
     matchLabels:
       app: backend
@@ -15,35 +16,49 @@ spec:
     spec:
       containers:
         - name: backend
-          image: your-dockerhub-username/backend:latest # <-- REPLACE THIS
+          # !!! REPLACE with your actual backend image !!!
+          image: backend-container
           ports:
-            - containerPort: 3000 # Port your server.js listens on
+            - containerPort: 3000
           env:
-            - name: PORT # Pass the port to your app if it needs it
-              value: "3000"
-            - name: MONGO_URI # Inject the database connection string
+            # Inject user/pass from Secret
+            - name: MONGO_USER
               valueFrom:
                 secretKeyRef:
-                  name: mongo-secret # Name of the secret created earlier
-                  key: MONGO_URI # Key within the secret
+                  name: app-secret
+                  key: mongo-user
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: mongo-password
+            # Construct the MONGO_URI using injected credentials and service name
+            - name: MONGO_URI
+              value: "mongodb://$(MONGO_USER):$(MONGO_PASS)@mongo:27017/mydatabase?authSource=admin"
+            - name: PORT
+              value: "3000"
+          # Liveness/Readiness probes checking the /health endpoint
           livenessProbe:
-            tcpSocket:
-              port: 3000 # Check if the application port is open
-            initialDelaySeconds: 15 # Wait 15s before first probe
-            periodSeconds: 20    # Check every 20s
+            httpGet:
+              path: /health # Ensure this endpoint exists in your backend
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
           readinessProbe:
-            tcpSocket:
-              port: 3000 # Check if the application port is open and ready
-            initialDelaySeconds: 5  # Wait 5s before first probe
-            periodSeconds: 10   # Check every 10s
-          resources:
-            requests: # Minimum guaranteed resources
+            httpGet:
+              path: /health # Ensure this endpoint exists in your backend
+              port: 3000
+            initialDelaySeconds: 20 # Check readiness sooner
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources: # Add resource limits as per Task 1 requirement
+            requests: # Minimum guaranteed
               memory: "64Mi"
-              cpu: "100m" # 0.1 CPU core
-            limits: # Maximum resources allowed
-              memory: "128Mi"
-              cpu: "250m" # 0.25 CPU core
-              # --- ADJUST FOR PROD ---
-              # Prod might need higher limits, e.g.:
-              # memory: "512Mi"
-              # cpu: "500m"
+              cpu: "100m"
+            limits: # Maximum allowed (Adjust for dev vs prod)
+              memory: "128Mi" # Example limit for DEV
+              cpu: "250m"   # Example limit for DEV
+---
