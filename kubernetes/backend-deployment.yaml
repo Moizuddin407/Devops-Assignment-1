@@ -17,7 +17,7 @@ spec:
       containers:
         - name: backend
           # !!! REPLACE with your actual backend image !!!
-          image: backend-container
+          image: alishizadi/devops-assignment2-backend:latest
           imagePullPolicy: IfNotPresent   # <-- ADD THIS LINE
 
           ports:

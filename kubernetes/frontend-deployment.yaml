@@ -16,7 +16,7 @@ spec:
       containers:
         - name: frontend
           # !!! REPLACE with your actual frontend image !!!
-          image: frontend-container
+          image: alishizadi/devops-assignment2-frontend:latest
           imagePullPolicy: IfNotPresent    # <-- ADD THIS LINE
           ports:
             - containerPort: 80 # Assuming frontend serves on port 80
