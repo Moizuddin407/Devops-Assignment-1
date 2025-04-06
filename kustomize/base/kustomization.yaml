@@ -6,8 +6,12 @@ resources:
   - mongo-secret.yaml
   - mongo-statefulset.yaml
   - mongo-service.yaml
-  - backend-deployment.yaml
+  - backend-v1-deployment.yaml
+  - backend-v2-deployment.yaml
   - backend-service.yaml
   - frontend-deployment.yaml
   - frontend-service.yaml # Or frontend.yaml
   - ingress.yaml
+  - backend-destinationrule.yaml
+  - backend-virtualservice.yaml 
+  - peerauthentication.yaml

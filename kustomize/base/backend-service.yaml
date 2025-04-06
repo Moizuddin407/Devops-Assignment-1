@@ -5,7 +5,7 @@ metadata:
   name: backend # Service name used by Ingress
 spec:
   selector:
-    app: backend # Selects backend pods
+    app: backend # Selects backend pods v1 & v2
   ports:
     - protocol: TCP
       port: 3000 # Service port matches container port here

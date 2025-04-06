@@ -1,0 +1,9 @@
+# kustomize/base/peerauthentication.yaml
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default # Apply to the whole namespace
+  # namespace: dev # Will be set by Kustomize overlay
+spec:
+  mtls:
+    mode: STRICT # Enforce mTLS for all services in the mesh
