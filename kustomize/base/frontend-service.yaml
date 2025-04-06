@@ -1,0 +1,13 @@
+# ------------------- Frontend Service -------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend # Service name used by Ingress
+spec:
+  selector:
+    app: frontend # Selects frontend pods
+  ports:
+    - protocol: TCP
+      port: 80 # Service port
+      targetPort: 80 # Frontend container listens on 80
+---
