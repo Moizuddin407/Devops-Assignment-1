@@ -3,6 +3,7 @@
 # DevOps Assignment 1
 
 This repository contains the implementation of DevOps principles, including CI/CD workflows, Dockerization, and application testing for a full-stack application. The project involves a Node.js backend, a React.js frontend, and integration with MongoDB. Additionally, it uses GitHub Actions for continuous integration and deployment (CI/CD) to Docker Hub.
+pass=uRhAdY1cNJ2yOp3y
 
 ## Table of Contents
 - [Project Overview](#project-overview)
