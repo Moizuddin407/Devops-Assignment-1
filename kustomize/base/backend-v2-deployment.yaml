@@ -1,5 +1,3 @@
-
-# ------------------- Backend Deployment -------------------
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,9 +16,8 @@ spec:
     spec:
       containers:
         - name: backend
-          # !!! REPLACE with your actual backend image !!!
-          image: alishizadi/devops-assignment2-backend:latest
-          imagePullPolicy: IfNotPresent   # <-- ADD THIS LINE
+          image: image: alishizadi/devops-assignment2-backend:broken-tag
+          imagePullPolicy: IfNotPresent   
 
           ports:
             - containerPort: 3000
