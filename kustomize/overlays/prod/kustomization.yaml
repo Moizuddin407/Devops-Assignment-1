@@ -8,6 +8,6 @@ bases:
 namespace: prod
 
 patches:
-  - path: backend-deployment-patch.yaml # Apply the backend patch
+  - path: backend-v1-patch.yaml # Apply the backend patch
   - path: frontend-deployment-patch.yaml # Apply the frontend patch
   # Add more patches here if needed (e.g., for different secrets, ingress host, etc.)

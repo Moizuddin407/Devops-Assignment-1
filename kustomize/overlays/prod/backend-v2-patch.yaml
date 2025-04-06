@@ -1,0 +1,18 @@
+# kustomize/overlays/prod/backend-v2-patch.yaml (Example)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-v2 # <-- Targets backend-v2
+spec:
+  replicas: 1 # Set desired prod replicas for v2
+  template:
+    spec:
+      containers:
+      - name: backend
+        resources: # Set desired prod resource limits/requests for v2
+          limits:
+            cpu: "1"
+            memory: "512Mi"
+          requests:
+            cpu: "0.5"
+            memory: "256Mi"

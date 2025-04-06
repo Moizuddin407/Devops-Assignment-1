@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend # Matches the name in the base deployment
+  name: backend-v1 # Matches the name in the base deployment
 spec:
   replicas: 2 # Example: Increase replicas for prod
   template:
