@@ -1,0 +1,81 @@
+# ------------------- MongoDB StatefulSet -------------------
+# Deploys MongoDB using StatefulSet for stable persistence (Task 1 Requirement)
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo # Name used for the StatefulSet resource
+spec:
+  serviceName: "mongo" # Associate with the regular 'mongo' Service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo # Label to match pods
+  template:
+    metadata:
+      labels:
+        app: mongo # Label applied to pods
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:6 # Your specified MongoDB image
+          ports:
+            - containerPort: 27017
+              name: mongo-port # Port name
+          env:
+            # Set root user/password for MongoDB initialization
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret # Reference the secret
+                  key: mongo-user # Key within the secret
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret # Reference the secret
+                  key: mongo-password # Key within the secret
+            - name: MONGO_INITDB_DATABASE
+              value: "mydatabase" # Database to initialize
+          volumeMounts:
+            - name: mongo-data # Mount name must match volumeClaimTemplates name
+              mountPath: /data/db # Standard MongoDB data directory
+          # Liveness/Readiness probes using mongosh ping command
+          livenessProbe:
+            exec:
+              command:
+                - mongosh
+                - --eval
+                - "db.runCommand('ping')"
+                # Optional: Add --quiet if needed, and potentially user/pass args if required after init
+                # - --username
+                # - $(MONGO_INITDB_ROOT_USERNAME)
+                # - --password
+                # - $(MONGO_INITDB_ROOT_PASSWORD)
+                # - --authenticationDatabase
+                # - admin
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - mongosh
+                - --eval
+                - "db.runCommand('ping')"
+                # Optional: Add --quiet and auth args similar to livenessProbe if needed
+            initialDelaySeconds: 15 # Check readiness sooner
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+      terminationGracePeriodSeconds: 30 # Allow time for graceful shutdown
+  # Automatically create PersistentVolumeClaims for storage
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-data # Name for the volume mount
+      spec:
+        accessModes: ["ReadWriteOnce"] # Suitable for single-node DB
+        resources:
+          requests:
+            storage: 5Gi # Adjust storage size as needed
+        # storageClassName: "your-storage-class" # Optional: Uncomment and set if needed
+---

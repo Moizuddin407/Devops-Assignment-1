@@ -1,0 +1,18 @@
+# kustomize/overlays/prod/frontend-deployment-patch.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 2 # Example: Increase replicas for prod
+  template:
+    spec:
+      containers:
+      - name: frontend
+        resources:
+          limits:
+            cpu: "200m"   # Higher CPU limit for prod
+            memory: "128Mi"  # Higher Memory limit for prod
+          requests:
+            cpu: "100m"   # Higher CPU request for prod
+            memory: "64Mi"   # Higher Memory request for prod

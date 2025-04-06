@@ -1,0 +1,14 @@
+# kustomize/overlays/dev/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Inherit from the base configuration
+bases:
+  - ../../base
+
+# Specify the namespace for the dev environment
+namespace: dev
+
+# Optional: Add patches specific to dev if needed later
+# patches:
+# - path: some-dev-patch.yaml

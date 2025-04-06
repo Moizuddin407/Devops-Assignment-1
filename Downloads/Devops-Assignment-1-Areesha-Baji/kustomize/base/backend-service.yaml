@@ -1,0 +1,13 @@
+# ------------------- Backend Service -------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend # Service name used by Ingress
+spec:
+  selector:
+    app: backend # Selects backend pods
+  ports:
+    - protocol: TCP
+      port: 3000 # Service port matches container port here
+      targetPort: 3000 # Backend container listens on 3000
+---
