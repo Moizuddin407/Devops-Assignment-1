@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  # Name for the Argo CD Application resource itself
+  name: my-app
+  # Deploy this Application resource into the argocd namespace
+  namespace: argocd
+spec:
+  # Argo CD Project - 'default' is fine for simple cases
+  project: default
+
+  # Source of the manifests
+  source:
+    # Your Git repository URL
+    repoURL: https://github.com/Moizuddin407/Devops-Assignment-1.git
+    # The directory within the repo containing the Kustomize overlay for prod
+    path: kustomize/overlays/prod
+    # The branch, tag, or commit to track
+    targetRevision: Ali's-Branch
+    # Specify that the source is Kustomize
+    kustomize: {} # Use this simple form if no specific Kustomize options are needed
+
+  # Destination cluster and namespace
+  destination:
+    # URL for the Kubernetes API server (use this for the same cluster Argo CD runs in)
+    server: https://kubernetes.default.svc
+    # Target namespace for deploying the application resources
+    namespace: prod
+
+  # Sync policy - automatic sync configuration
+  syncPolicy:
+    automated:
+      # Automatically delete resources that are removed from the Git repository
+      prune: true
+      # Automatically sync the application when changes are detected in Git
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true # Automatically create the 'prod' namespace if it doesn't exist
