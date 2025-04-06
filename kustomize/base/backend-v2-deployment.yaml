@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: alishizadi/devops-assignment2-backend:broken-tag
+          image: alishizadi/devops-assignment2-backend:latest
           imagePullPolicy: IfNotPresent   
 
           ports:
