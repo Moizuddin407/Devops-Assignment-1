@@ -1,0 +1,18 @@
+# kustomize/base/backend-virtualservice.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: backend-virtualservice # Name for the VirtualService resource
+spec:
+  hosts:
+  - backend # Apply rules to requests targeting the 'backend' Kubernetes service
+  http:
+  - route:
+    - destination:
+        host: backend # Target the backend service
+        subset: v1    # Send to the v1 subset defined in DestinationRule
+      weight: 90      # Send 90% of traffic here
+    - destination:
+        host: backend # Target the backend service
+        subset: v2    # Send to the v2 subset defined in DestinationRule
+      weight: 10      # Send 10% of traffic here

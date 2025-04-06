@@ -3,16 +3,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: backend-v1
 spec:
   replicas: 1 # Adjust for prod/dev later
   selector:
     matchLabels:
       app: backend
+      version: v1
   template:
     metadata:
       labels:
         app: backend
+        version: v1
     spec:
       containers:
         - name: backend
