@@ -1,0 +1,14 @@
+# kustomize/base/backend-destinationrule.yaml
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: backend-destinationrule # Name for the DestinationRule resource
+spec:
+  host: backend # The Kubernetes service name this rule applies to
+  subsets:
+  - name: v1      # Name of the first subset
+    labels:
+      version: v1 # Selects pods with label version=v1
+  - name: v2      # Name of the second subset
+    labels:
+      version: v2 # Selects pods with label version=v2
